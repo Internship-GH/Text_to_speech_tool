@@ -48,6 +48,7 @@ languageDropdown.addEventListener('change', updateSpeakerDropdown);
 const convert_form = document.getElementById("conversion_form");
 const audio_trans_container = document.getElementById("Audio_trans_container");
 const convert_btn = document.getElementById('convert_btn');
+const convert_text = document.getElementById("convert_text");
 
 //Create event listener for the submit button.
 convert_form.addEventListener("submit", async (event) => {
@@ -57,6 +58,13 @@ convert_form.addEventListener("submit", async (event) => {
     //Disable submit button
     convert_btn.disabled = true;
     convert_btn.innerHTML = "Converting...";
+
+    if (convert_text == ""){
+        convert_btn.disabled = false;
+        convert_btn.innerHTML = "Convert to Audio";
+
+        audio_trans_container.innerText = "Text required to convert to speech";
+    }
 
     //Package all input fields from form
     const formData = new FormData(convert_form);
@@ -100,6 +108,33 @@ convert_form.addEventListener("submit", async (event) => {
             convert_btn.innerHTML = "Convert to Audio";
         }
 });
+
+const characterCounter = (textareaId, spanId, maxChars=1000) => {
+    const textarea = document.getElementById(textareaId);
+    const count = document.getElementById(spanId);
+
+    //if the text area Id or span Id cannot be found, stop running script
+    if (!textareaId || !spanId){return};
+
+    textarea.addEventListener('input', () => {
+        const remaining = maxChars - textarea.value.length;
+        count.textContent= remaining;
+
+         if (remaining <= 100){
+            count.classList.add(
+                "text-red-400"
+            );
+        }else {
+            count.classList.remove(
+                "text-red-400"
+            )
+        }
+    })
+
+      
+}
+
+characterCounter('convert_text', 'convert_counter', 1000);
 
 
 
