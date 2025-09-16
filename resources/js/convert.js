@@ -98,9 +98,11 @@ convert_form.addEventListener("submit", async (event) => {
             audio.play();
 
         }else {
+            audio_trans_container.innerHTML = "Oops! Could not generate audio.";
             console.error("Error", audio_data);
         }
     }catch(error){
+            audio_trans_container.innerHTML = "An error occured."
             console.error("Fetch Error:", error);
 
     }finally{
