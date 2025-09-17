@@ -1,0 +1,32 @@
+services:
+  # -------------------
+  # Web service (Apache)
+  # -------------------
+  - type: web
+    name: laravel-web
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        sync: false   # set this manually after deploy
+
+  # -------------------
+  # Scheduler worker
+  # -------------------
+  - type: worker
+    name: laravel-scheduler
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeploy: true
+    startCommand: php artisan schedule:work
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        sync: false

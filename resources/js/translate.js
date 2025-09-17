@@ -21,7 +21,7 @@ const translate = async (action) => {
     translate_btn.disabled = true;
     translate_btn.innerHTML = 'Translating...';
 
-    if (to == from){
+    if (to == from ||  to == 'ee' && from == 'tw' || to == 'tw' && from == 'ee'){
         translation.classList.add(
             "text-red-400"
         )
