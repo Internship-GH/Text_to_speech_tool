@@ -15,9 +15,19 @@ RUN npm run build
 # =============================
 FROM composer:2 AS build
 WORKDIR /app
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader
+
 COPY . .
+
+RUN apt-get update && apt-get install -y \
+    unzip \
+    libzip-dev \
+    libpng-dev \
+    libonig-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+
+RUN composer install --no-dev --optimize-autoloader
+
 
 # Copy compiled Vite assets from frontend stage
 COPY --from=frontend /app/public /app/public
@@ -32,7 +42,13 @@ WORKDIR /var/www/html
 RUN a2enmod rewrite
 
 # Install required PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql mbstring bcmath
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    libpng-dev \
+    libonig-dev \
+    && docker-php-ext-install pdo pdo_mysql mbstring bcmath zip gd \
+    && rm -rf /var/lib/apt/lists/*
+
 
 # Copy Laravel app from build stage
 COPY --from=build /app ./
