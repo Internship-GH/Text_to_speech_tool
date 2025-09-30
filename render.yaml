@@ -1,7 +1,7 @@
 services:
-  # -------------------
+  
   # Web service (Apache)
-  # -------------------
+ 
   - type: web
     name: laravel-web
     env: docker
