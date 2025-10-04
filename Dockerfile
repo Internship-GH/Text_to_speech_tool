@@ -95,5 +95,10 @@ RUN sed -i 's/80/10000/g' /etc/apache2/ports.conf \
 # Render listens on port 10000
 EXPOSE 10000 
 
+
+# Create volume mount point for .env
+VOLUME ["/var/www/html/.env"]
+
+
 # Start Apache
 CMD ["apache2-foreground"]
