@@ -97,7 +97,7 @@ EXPOSE 10000
 
 
 # Create volume mount point for .env
-#VOLUME ["/var/www/html/.env"]
+VOLUME ["/var/www/html/.env"]
 
 
 # Start Apache
