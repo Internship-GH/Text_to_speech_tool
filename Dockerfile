@@ -87,12 +87,12 @@ RUN chown -R www-data:www-data /var/www/html \
 RUN rm -rf /var/www/html/public/storage \
     && ln -s /var/www/html/storage/app/public /var/www/html/public/storage
 
-ARG PORT= 8080
+ARG PORT=8080
 ENV PORT=${PORT}
 
-# Change Apache port from 80 → 10000 (Render requirement)
-RUN sed -i 's/Listen 80/Listen ${PORT}/' /etc/apache2/ports.conf \
-    && sed -i 's/:80/:${PORT}/' /etc/apache2/sites-available/000-default.conf
+# Using the dynamically allocated port
+RUN sed -i "s/Listen 80/Listen ${PORT}/" /etc/apache2/ports.conf \
+    && sed -i "s/:80/:${PORT}/" /etc/apache2/sites-available/000-default.conf
 
 # Expose to the port automatically set by railway
 EXPOSE ${PORT}
