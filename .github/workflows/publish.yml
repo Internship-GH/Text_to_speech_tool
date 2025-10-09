@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: NaaKuorkor/text_to_speech_tool
+  IMAGE_NAME: naakuorkor/text_to_speech_tool
 
 jobs:
   build-and-push:
