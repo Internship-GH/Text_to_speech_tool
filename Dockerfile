@@ -40,61 +40,26 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 COPY --from=frontend /var/www/html/public /var/www/html/public
 
 # =============================
-# Stage 3: PHP + Apache
+# Stage 3: Nginx + PHP-FPM
 # =============================
-FROM php:8.4-apache-alpine
+FROM php:8.3-fpm-alpine
+
+# Install nginx and supervisor
+RUN apk add --no-cache nginx supervisor
 
 WORKDIR /var/www/html
 
-# Enable mod_rewrite 
-RUN sed -i 's/#LoadModule rewrite_module/LoadModule rewrite_module/' /etc/apache2/httpd.conf
-
-
-# Install required PHP extensions
-RUN apk add --no-cache \
-    libpng-dev \
-    libzip-dev \
-    oniguruma-dev \
-    && docker-php-ext-install pdo pdo_mysql mbstring gd bcmath zip
-
-# Copy Laravel app from build stage
+# Copy built app from previous stage
 COPY --from=build /var/www/html /var/www/html
 
+# Configure Supervisor to run both services
+COPY ./docker/supervisord.conf /etc/supervisord.conf
 
-# Set Apache DocumentRoot to /public
-RUN sed -i 's|DocumentRoot "/var/www/localhost/htdocs"|DocumentRoot "/var/www/html/public"|' /etc/apache2/httpd.conf
-
-# Allow .htaccess overrides for Laravel
-RUN echo '<Directory /var/www/html/public>\n\
-    AllowOverride All\n\
-    Require all granted\n\
-</Directory>' >> /etc/apache2/httpd.conf
-
-# Allow Apache to follow symlinks in /public/storage
-RUN echo '<Directory /var/www/html/public/storage>\n\
-    Options FollowSymLinks\n\
-    AllowOverride All\n\
-    Require all granted\n\
-</Directory>' >> /etc/apache2/httpd.conf
-
-# Fix permissions
-RUN chown -R apache:apache /var/www/html \
-    && chmod -R 755 /var/www/html \
+# Permissions
+RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Recreate storage symlink
-RUN rm -rf /var/www/html/public/storage \
-    && ln -s /var/www/html/storage/app/public /var/www/html/public/storage
+EXPOSE 8080
 
-
-ARG PORT=8080
-ENV PORT=${PORT}
-
-# Using the dynamically allocated port
-RUN sed -i "s/Listen 80/Listen ${PORT}/" /etc/apache2/httpd.conf
-
-# Expose to the port automatically set by railway
-EXPOSE ${PORT}
-
-# Start Apache
-CMD ["httpd", "-D", "FOREGROUND"]
+# Start Nginx + PHP-FPM via Supervisor
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
