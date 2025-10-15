@@ -1,65 +1,40 @@
-# =============================
-# Stage 1: Build frontend assets with Node (Vite)
-# =============================
-FROM node:20-alpine AS frontend
-WORKDIR /var/www/html
-
-# Install frontend deps and build
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-
-# =============================
-# Stage 2: Build PHP dependencies with Composer
-# =============================
-FROM php:8.4-cli-alpine AS build
+FROM php:8.3-cli-alpine
 
 WORKDIR /var/www/html
 
-#Install system dependencies and extensions for composer
+# Install system dependencies
 RUN apk add --no-cache \
     git \
     unzip \
     libpng-dev \
+    libjpeg-turbo-dev \
+    libwebp-dev \
     libzip-dev \
     oniguruma-dev \
-    autoconf \
-    g++ \
-    make \
-    && docker-php-ext-install zip pdo pdo_mysql mbstring gd bcmath
+    nodejs \
+    npm
 
-#Install composer
+# Install PHP extensions
+RUN docker-php-ext-configure gd --with-jpeg --with-webp
+RUN docker-php-ext-install zip pdo pdo_mysql mbstring gd bcmath
+
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copy application files
 COPY . .
 
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
+# Install Node dependencies and build assets
+RUN npm ci && npm run build
 
-# Copy compiled Vite assets from frontend stage
-COPY --from=frontend /var/www/html/public /var/www/html/public
+# Set permissions
+RUN chmod -R 775 storage bootstrap/cache
 
-# =============================
-# Stage 3: Nginx + PHP-FPM
-# =============================
-FROM php:8.3-fpm-alpine
+# Expose port
+EXPOSE 8000
 
-# Install nginx and supervisor
-RUN apk add --no-cache nginx supervisor
-
-WORKDIR /var/www/html
-
-# Copy built app from previous stage
-COPY --from=build /var/www/html /var/www/html
-
-# Configure Supervisor to run both services
-COPY ./docker/supervisord.conf /etc/supervisord.conf
-
-# Permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
-
-EXPOSE 8080
-
-# Start Nginx + PHP-FPM via Supervisor
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+# Start the application
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
