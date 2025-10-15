@@ -37,7 +37,7 @@ RUN npm ci && npm run build
 RUN chmod -R 775 storage bootstrap/cache
 
 # Expose port
-EXPOSE 8000
+EXPOSE ${PORT}
 
 # Start the application
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", $PORT]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", ${PORT} ]
