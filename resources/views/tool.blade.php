@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text-To-Speech Tool And Translator</title>
-    @vite(['resources/css/app.css', 'resources/js/tabs.js'])
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        @vite(['resources/js/tabs.js'])
+        <!--@vite(['resources/css/app.css', 'resources/js/tabs.js'])-->
 </head>
 
 <body class=" bg-blue-300 min-h-screen flex flex-col items-center justify-start p-6 font-sans text-gray-700">
 
-   
+
         <header class="text-center mb-8">
             <h1 class='text-3xl font-bold text-blue-700 mb-2' id="Title">Text To Speech Tool</h1>
             <p class="text-gray-600 italic"></p>
         </header>
-        
+
         <main class="w-full max-w-6xl ">
             <!--Tab bars-->
             <div class="flex   items-center ">
@@ -40,15 +43,15 @@
                       </select>
                       <label for="Speaker" class="">Select speaker</label>
                       <select name="Speaker" id="Speaker" class="flex-1 p-2 rounded-lg border border-gray-300">
-          
+
                       </select>
                   </div>
 
-                  
+
                   <textarea name="Local_text" id="convert_text" class="w-full h-32 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 mb-3" placeholder="Enter up to 1000 characters...." rows="10" cols="50" maxlength="1000"></textarea>
                   <!--Set counter for characters-->
                   <div class="text-right text-sm text-gray-500 mt-1"><span id='convert_counter' class="">1000</span> characters left</div>
-                  
+
                   <div class="flex justify-between items-center">
                       <button type="submit" id="convert_btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">Convert to Audio</button>
                   </div>
@@ -58,7 +61,7 @@
               <div id="Audio_trans_container" class="mt-4  border  p-4 rounded-lg text-center text-gray-700">
                   <h3>Audio Player Here</h3>
               </div>
-            
+
             </div>
 
             <div id="translator-panel" class="translation_form_container bg-white shadow-lg rounded-2xl rounded-tl-none p-6 border border-gray-500" role="tabpanel" hidden>
@@ -83,29 +86,29 @@
                             <option value="ee">Ewe</option>
                         </select>
                     </div>
-                  
+
                     <div>
-                        
+
                     </div>
-                    
+
 
                     <textarea name="trans_text" class="w-full h-32 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 mb-3" id="trans_text" placeholder="Enter up to 1000 characters...." rows="10" cols="50" maxlength="1000"></textarea>
                     <!--Set counter for characters-->
                     <div class="text-right text-sm text-gray-500 mt-1"><span id="translate_counter" class="">1000</span> characters left</div>
-                    
+
                     <div>
-                      <button type='submit' id='translate_btn' class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">Translate</button>  
+                      <button type='submit' id='translate_btn' class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">Translate</button>
                     </div>
-                    
+
                 </form>
-                
+
                 <div id ='translation_container' class="mt-4  border  p-4 rounded-lg text-gray-700">
                     <p id="translation" class="">Translated text will appear here</p>
                 </div>
               </div>
         </main>
-        
-    
+
+
 
     @vite(['resources/js/translate.js', 'resources/js/convert.js'])
 </body>
