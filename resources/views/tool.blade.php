@@ -6,7 +6,7 @@
     <title>Text-To-Speech Tool And Translator</title>
 
         <script src="https://cdn.tailwindcss.com"></script>
-        @vite(['resources/js/tabs.js'])
+        <script src="{{ asset('js/tabs.js')}}"></script>
         <!--@vite(['resources/css/app.css', 'resources/js/tabs.js'])-->
 </head>
 
@@ -109,7 +109,8 @@
         </main>
 
 
-
-    @vite(['resources/js/translate.js', 'resources/js/convert.js'])
+    <script src="{{ asset('js/translate.js') }}"></script>
+    <script src="{{ asset('js/convert.js') }}"></script>
+    <!--@vite(['resources/js/translate.js', 'resources/js/convert.js'])-->
 </body>
 </html>
