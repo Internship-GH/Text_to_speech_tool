@@ -26,9 +26,6 @@ jobs:
         run: npm install -g @railway/cli
 
 
-      - name: Authenticate with Railway
-        run: railway login --token ${{ secrets.RAILWAY_TOKEN}}
-
 
       - name: Install dependencies
         if: hashFiles('**/package-lock.json') != ''
@@ -45,6 +42,8 @@ jobs:
 
 
       - name: Deploy to Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN}}
         run: |
           echo "🚀 Deploying to Railway..."
           railway up --yes
