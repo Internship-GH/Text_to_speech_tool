@@ -20,6 +20,13 @@ jobs:
           extensions: mbstring, bcmath, pdo_mysql, zip, curl, gd
           coverage: none
 
+
+      - name: 🛠️ Install Railway CLI
+        run: |
+          npm install -g @railway/cli
+          echo "$(npm bin -g)" >> $GITHUB_PATH
+          railway --version
+
       - name: 🪄 Validate composer.json and composer.lock
         run: composer validate --no-check-lock --no-interaction
 
@@ -50,5 +57,5 @@ jobs:
         env:
            RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-         echo "Deploying Laravel scheduler..."
-         railway up --service laravel-scheduler
+          echo "Deploying Laravel scheduler..."
+          railway up --service laravel-scheduler
