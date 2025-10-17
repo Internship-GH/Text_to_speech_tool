@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text-To-Speech Tool And Translator</title>
 
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script src="{{ asset('js/tabs.js')}}"></script>
-        <!--@vite(['resources/css/app.css', 'resources/js/tabs.js'])-->
+        @vite(['resources/css/app.css', 'resources/js/tabs.js'])
 </head>
 
 <body class=" bg-blue-300 min-h-screen flex flex-col items-center justify-start p-6 font-sans text-gray-700">
@@ -109,8 +107,6 @@
         </main>
 
 
-    <script src="{{ asset('js/translate.js') }}"></script>
-    <script src="{{ asset('js/convert.js') }}"></script>
-    <!--@vite(['resources/js/translate.js', 'resources/js/convert.js'])-->
+   @vite(['resources/js/translate.js', 'resources/js/convert.js'])
 </body>
 </html>

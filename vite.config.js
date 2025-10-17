@@ -5,11 +5,16 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/tabs.js', 
+            input: ['resources/css/app.css', 'resources/js/tabs.js',
                 'resources/js/convert.js', 'resources/js/translate.js'],
             refresh: true,
         }),
         tailwindcss(),
     ],
-   
+    build : {
+        outDir: 'public/build',
+        manifest: true,
+        emptyOutDir: true,
+    },
+
 });
